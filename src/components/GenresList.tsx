@@ -7,10 +7,7 @@ import {
   List,
   ListItem,
   Spinner,
-  Text,
-  WrapItem,
 } from "@chakra-ui/react";
-import { wrap } from "framer-motion";
 
 interface Props {
   onSelectGenre: (genre: Genre) => void;
