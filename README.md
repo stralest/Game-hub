@@ -1,73 +1,93 @@
-# React + TypeScript + Vite
+# 🎮 GameHub – Video Game Discovery App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+GameHub is a web application built with React, TypeScript, and Vite.  
+The application uses the RAWG Video Games API to display and filter video games.
 
-Currently, two official plugins are available:
+It allows users to browse games, search by name, filter by genre and platform, and sort results dynamically.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 🚀 Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- 🔎 Search games by name
+- 🎭 Filter by genre
+- 🕹️ Filter by parent platform
+- ⬇️ Sort games (e.g., by relevance, date, rating)
+- 🌙 Dark / Light mode toggle
+- 📱 Responsive layout
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🛠️ Tech Stack
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- React
+- TypeScript
+- Vite
+- Chakra UI
+- Axios
+- RAWG API
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 🏗️ Project Structure
+
+- Custom reusable hooks (`useGames`, `useGenres`, `usePlatforms`)
+- Centralized query state (`gameQuery`)
+- API requests handled through a shared Axios client
+- Modular component structure
+
+---
+
+## 📦 Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/stralest/Game-hub.git
+
+Navigate into the project directory:
+
+cd game-hub
+
+
+Install dependencies:
+
+npm install
+
+
+Start development server:
+
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+##🔑 API Configuration
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+This project uses the RAWG API.
+
+To run it locally, you need to generate your own API key from:
+
+https://rawg.io/apidocs
+
+Then add the key inside:
+
+services/api-client.ts
+
+---
+
+##🧠 What I Learned
+
+Creating reusable custom React hooks
+
+Managing shared query state in a scalable way
+
+Server-side filtering using query parameters
+
+Difference between ?? and ||
+
+Controlled vs uncontrolled components
+
+Handling asynchronous requests with Axios
+
+Clean and maintainable component structure
