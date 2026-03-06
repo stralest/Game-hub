@@ -1,4 +1,4 @@
-import { Grid, GridItem, HStack, Show } from "@chakra-ui/react";
+import { Button, Grid, GridItem, HStack, Show } from "@chakra-ui/react";
 import NavBar from "./components/NavBar";
 import GameGrid from "./components/GameGrid";
 import GenresList from "./components/GenresList";
@@ -8,6 +8,10 @@ import PlatformSelector from "./components/PlatformSelector";
 import type { Platform } from "./hooks/usePlatforms";
 import SortSelector from "./components/SortSelector";
 import GameHeading from "./components/GameHeading";
+import type { Game } from "./hooks/useGames";
+import { Route, Routes } from "react-router-dom";
+import FavoriteGames from "./pages/FavoriteGames";
+import { Link } from "react-router-dom";
 
 export interface GameQuery {
   genre: Genre | null;
@@ -18,6 +22,19 @@ export interface GameQuery {
 
 function App() {
   const [gameQuery, setGameQuery] = useState<GameQuery>({} as GameQuery);
+  const [favoriteGames, setFavoriteGames] = useState<Game[]>([]);
+
+  const handleFavoriteGames = (game: Game) => {
+    const isFavorite = favoriteGames.some((favGame) => favGame.id === game.id);
+
+    if (isFavorite) {
+      setFavoriteGames(
+        favoriteGames.filter((favGame) => favGame.id !== game.id),
+      );
+    } else {
+      setFavoriteGames([...favoriteGames, game]);
+    }
+  };
 
   return (
     <>
@@ -37,6 +54,14 @@ function App() {
               setGameQuery((prev) => ({ ...prev, searchText }))
             }
           />
+          <HStack mx={5} spacing={4}>
+            <Button as={Link} to="/" variant="outline">
+              Home
+            </Button>
+            <Button as={Link} to="/favorites" variant="outline">
+              Favorites ({favoriteGames.length})
+            </Button>
+          </HStack>
         </GridItem>
         <Show above="lg">
           <GridItem area="aside" paddingX={5}>
@@ -49,22 +74,44 @@ function App() {
           </GridItem>
         </Show>
         <GridItem area="main">
-          <GameHeading gameQuery={gameQuery} />
-          <HStack spacing={5} paddingLeft={5}>
-            <PlatformSelector
-              selectedPlatform={gameQuery.platform}
-              onSelectPlatform={(platform) =>
-                setGameQuery((prev) => ({ ...prev, platform }))
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <>
+                  <GameHeading gameQuery={gameQuery} />
+                  <HStack spacing={5} paddingLeft={5}>
+                    <PlatformSelector
+                      selectedPlatform={gameQuery.platform}
+                      onSelectPlatform={(platform) =>
+                        setGameQuery((prev) => ({ ...prev, platform }))
+                      }
+                    />
+                    <SortSelector
+                      sortOrder={gameQuery.sortOrder}
+                      onSelectedSortOrder={(sortOrder) =>
+                        setGameQuery((prev) => ({ ...prev, sortOrder }))
+                      }
+                    />
+                  </HStack>
+                  <GameGrid
+                    gameQuery={gameQuery}
+                    favoriteGames={favoriteGames}
+                    onToggleFavorites={handleFavoriteGames}
+                  />
+                </>
               }
-            />
-            <SortSelector
-              sortOrder={gameQuery.sortOrder}
-              onSelectedSortOrder={(sortOrder) =>
-                setGameQuery((prev) => ({ ...prev, sortOrder }))
+            ></Route>
+            <Route
+              path="/favorites"
+              element={
+                <FavoriteGames
+                  favoriteGames={favoriteGames}
+                  onToggleFavorite={handleFavoriteGames}
+                />
               }
-            />
-          </HStack>
-          <GameGrid gameQuery={gameQuery} />
+            ></Route>
+          </Routes>
         </GridItem>
       </Grid>
     </>
