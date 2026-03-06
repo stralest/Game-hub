@@ -9,7 +9,7 @@ import type { Platform } from "./hooks/usePlatforms";
 import SortSelector from "./components/SortSelector";
 import GameHeading from "./components/GameHeading";
 import type { Game } from "./hooks/useGames";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import FavoriteGames from "./pages/FavoriteGames";
 import { Link } from "react-router-dom";
 
@@ -23,6 +23,8 @@ export interface GameQuery {
 function App() {
   const [gameQuery, setGameQuery] = useState<GameQuery>({} as GameQuery);
   const [favoriteGames, setFavoriteGames] = useState<Game[]>([]);
+  const location = useLocation();
+  const isFavoritePage = location.pathname === "/favorites";
 
   const handleFavoriteGames = (game: Game) => {
     const isFavorite = favoriteGames.some((favGame) => favGame.id === game.id);
@@ -39,14 +41,28 @@ function App() {
   return (
     <>
       <Grid
-        templateAreas={{
-          base: `"nav" "main"`,
-          lg: `"nav nav" "aside main"`,
-        }}
-        templateColumns={{
-          base: "1fr",
-          lg: "200px 1fr",
-        }}
+        templateAreas={
+          isFavoritePage
+            ? {
+                base: `"nav" "main"`,
+                lg: `"nav nav" "main main"`,
+              }
+            : {
+                base: `"nav" "main"`,
+                lg: `"nav nav" "aside main"`,
+              }
+        }
+        templateColumns={
+          isFavoritePage
+            ? {
+                base: "1fr",
+                lg: "1fr",
+              }
+            : {
+                base: "1fr",
+                lg: "200px 1fr",
+              }
+        }
       >
         <GridItem area="nav">
           <NavBar
@@ -63,16 +79,18 @@ function App() {
             </Button>
           </HStack>
         </GridItem>
-        <Show above="lg">
-          <GridItem area="aside" paddingX={5}>
-            <GenresList
-              selectedGenre={gameQuery.genre}
-              onSelectGenre={(genre) =>
-                setGameQuery((prev) => ({ ...prev, genre }))
-              }
-            />
-          </GridItem>
-        </Show>
+        {!isFavoritePage && (
+          <Show above="lg">
+            <GridItem area="aside" paddingX={5}>
+              <GenresList
+                selectedGenre={gameQuery.genre}
+                onSelectGenre={(genre) =>
+                  setGameQuery((prev) => ({ ...prev, genre }))
+                }
+              />
+            </GridItem>
+          </Show>
+        )}
         <GridItem area="main">
           <Routes>
             <Route
